@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Primary SEO Meta Tags -->
+  <title>更新日志 (Changelog) - MiBar 💡</title>
+  <meta name="title" content="更新日志 (Changelog) - MiBar 💡">
+  <meta name="description" content="MiBar 版本更新历史与迭代日志。了解最新功能演进、拟态玻璃 UI 升级、性能优化及安全存储改进。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mibar.pages.dev/changelog.html">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mibar.pages.dev/changelog.html">
+  <meta property="og:title" content="更新日志 (Changelog) - MiBar 💡">
+  <meta property="og:description" content="MiBar 版本更新历史与迭代日志。了解最新功能演进、拟态玻璃 UI 升级、性能优化及安全存储改进。">
+  <meta property="og:image" content="https://mibar.pages.dev/assets/512.png">
+
+  <!-- Favicon & Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/32.png">
+  <link rel="icon" type="image/png" sizes="128x128" href="assets/128.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="assets/512.png">
+  <meta name="theme-color" content="#090d16">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+              900: '#78350f',
+            },
+            dark: {
+              bg: '#090d16',
+              card: 'rgba(18, 24, 38, 0.75)',
+              border: 'rgba(255, 255, 255, 0.12)'
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', '"SF Pro Display"', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Theme Init Script -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('mibar-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'light' || (!savedTheme && !prefersDark)) {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#090d16] text-slate-100 font-sans antialiased selection:bg-amber-500 selection:text-black">
+
+  <!-- Background Ambient Glows -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+  <div class="glow-grid"></div>
+
+  <!-- Header / Navigation -->
+  <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-2xl bg-[#090d16]/80 border-b border-white/10 transition-all duration-300" id="mainHeader">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3 no-underline group">
+        <div class="w-9 h-9 rounded-xl overflow-hidden shadow-lg border border-white/15 group-hover:scale-105 transition-transform bg-neutral-900 flex-shrink-0">
+          <img src="assets/128.png" alt="MiBar Logo" class="w-full h-full object-cover">
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="text-lg font-bold tracking-tight text-white group-hover:text-amber-300 transition-colors" id="logoText">MiBar</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 font-mono border border-amber-500/30">v1.1.0</span>
+          </div>
+          <span class="text-[11px] text-slate-400 font-normal">macOS 菜单栏挂灯控制器</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-300">
+        <a href="index.html#features" class="nav-link">核心特性</a>
+        <a href="index.html#demo" class="nav-link">在线体验</a>
+        <a href="index.html#quickstart" class="nav-link">快速上手</a>
+        <a href="index.html#specs" class="nav-link">设备与架构</a>
+        <a href="index.html#faq" class="nav-link">常见问题</a>
+        <a href="changelog.html" class="nav-link text-amber-400 font-semibold">更新日志</a>
+      </nav>
+
+      <!-- Action Buttons + Theme Toggle -->
+      <div class="flex items-center gap-3">
+        <button id="themeToggleBtn" class="theme-toggle-btn" title="切换深色/浅色主题" aria-label="切换主题">
+          <svg class="sun-icon w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg class="moon-icon w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+
+        <a href="https://github.com/extrastu/MiBar" target="_blank" rel="noopener noreferrer" class="btn-secondary hidden sm:inline-flex">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>Star 源码</span>
+        </a>
+        <a href="https://github.com/extrastu/MiBar/releases" target="_blank" rel="noopener noreferrer" class="btn-primary">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+          <span>免费下载</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="pt-32 pb-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Title Section -->
+    <div class="text-center mb-16">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-300 text-xs font-mono font-medium mb-4">
+        <span>CHANGELOG</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
+        更新日志
+      </h1>
+      <p class="text-slate-400 text-base max-w-xl mx-auto italic">
+        “Simplicity is about subtracting the obvious and adding the meaningful.”
+      </p>
+    </div>
+
+    <!-- Timeline Releases -->
+    <div class="space-y-12 relative before:absolute before:inset-0 before:left-8 sm:before:left-1/2 before:w-0.5 before:bg-gradient-to-b before:from-amber-500/40 before:via-white/10 before:to-transparent">
+      
+      <!-- Release v1.1.0 -->
+      <article class="relative flex flex-col sm:flex-row items-start group">
+        
+        <!-- Center Icon Badge -->
+        <div class="absolute left-8 sm:left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-[#090d16] border-2 border-amber-400 flex items-center justify-center text-amber-400 shadow-lg shadow-amber-500/20 z-10">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/></svg>
+        </div>
+
+        <!-- Release Content Card -->
+        <div class="w-full sm:w-[calc(50%-2.5rem)] ml-16 sm:ml-auto p-6 sm:p-8 rounded-3xl bg-[#121826]/75 border border-amber-500/30 backdrop-blur-2xl shadow-xl hover:border-amber-400/50 transition-all">
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <div class="flex items-center gap-2.5">
+              <span class="text-xl font-bold text-white">v1.1.0</span>
+              <span class="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Latest</span>
+            </div>
+            <time class="text-xs text-slate-400 font-mono">2026-09-02</time>
+          </div>
+
+          <div class="space-y-6 text-sm text-slate-300">
+            
+            <!-- Section 1 -->
+            <div>
+              <h3 class="text-white font-semibold flex items-center gap-2 mb-2.5 text-base">
+                <span class="text-amber-400">✨</span> 视觉与交互体验升级
+              </h3>
+              <ul class="space-y-2 list-disc list-inside text-slate-300">
+                <li><strong class="text-white">快捷场景 Glass 拟态玻璃质感</strong>：预设按钮采用系统级 <code class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 text-xs font-mono">.ultraThinMaterial</code>，通透轻盈。</li>
+                <li><strong class="text-white">高光反光与多色渐变描边</strong>：增加顶部 Specular Highlight 真实玻璃反射与自适应渐变边缘。</li>
+                <li><strong class="text-white">微交互优化</strong>：支持平滑 Hover 提亮与悬浮微缩放，选中时呈现场景主题色浸润；移除多余阴影保持纯净原生。</li>
+              </ul>
+            </div>
+
+            <!-- Section 2 -->
+            <div>
+              <h3 class="text-white font-semibold flex items-center gap-2 mb-2.5 text-base">
+                <span class="text-amber-400">🔒</span> 存储与权限体验优化
+              </h3>
+              <ul class="space-y-2 list-disc list-inside text-slate-300">
+                <li><strong class="text-white">Token 存储无感化（UserDefaults 隔离存储）</strong>：避免非沙盒/本地构建环境下 Keychain 频繁弹出系统授权密码对话框的问题。</li>
+                <li>实现零密码干扰、静默读取与秒级保存，大幅优化开箱即用体验。</li>
+              </ul>
+            </div>
+
+            <!-- Section 3 -->
+            <div>
+              <h3 class="text-white font-semibold flex items-center gap-2 mb-2.5 text-base">
+                <span class="text-amber-400">🏗️</span> 架构与组件化解耦
+              </h3>
+              <ul class="space-y-2 list-disc list-inside text-slate-300">
+                <li>全面重构 <code class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 text-xs font-mono">LightMenuView</code>，将单一 900 行视图解耦为 <code class="text-xs font-mono">LightMenuHeaderView</code>、<code class="text-xs font-mono">SceneGlassButton</code>、<code class="text-xs font-mono">LightMenuFooterView</code> 与 <code class="text-xs font-mono">LightConfigurationView</code> 等微组件。</li>
+                <li>主视图精简至约 140 行，模块分工明确，大幅提升可维护性。</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+      </article>
+
+      <!-- Release v1.0.0 -->
+      <article class="relative flex flex-col sm:flex-row items-start group">
+        
+        <!-- Center Icon Badge -->
+        <div class="absolute left-8 sm:left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-[#090d16] border-2 border-slate-600 flex items-center justify-center text-slate-400 shadow-md z-10">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+        </div>
+
+        <!-- Release Content Card -->
+        <div class="w-full sm:w-[calc(50%-2.5rem)] ml-16 sm:mr-auto sm:ml-0 p-6 sm:p-8 rounded-3xl bg-[#121826]/75 border border-white/10 backdrop-blur-2xl shadow-xl hover:border-white/20 transition-all">
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <span class="text-xl font-bold text-white">v1.0.0</span>
+            <time class="text-xs text-slate-400 font-mono">2026-08-30</time>
+          </div>
+
+          <div class="space-y-4 text-sm text-slate-300">
+            <h3 class="text-white font-semibold flex items-center gap-2 text-base">
+              <span class="text-amber-400">🚀</span> 初始版本发布
+            </h3>
+            <ul class="space-y-2 list-disc list-inside text-slate-300">
+              <li><strong class="text-white">macOS 原生菜单栏常驻</strong>：适配 macOS 14+ / 26+ 原生毛玻璃弹出窗口与自适应收缩。</li>
+              <li><strong class="text-white">局域网 miIO 直连</strong>：基于 UDP 报文与 AES-128-CBC 加密，毫秒级极速调光。</li>
+              <li><strong class="text-white">双维度平滑滑块</strong>：高精度支持 1%~100% 亮度与 2700K~6500K 色温调节，支持触控板与滚轮手势。</li>
+              <li><strong class="text-white">四大快捷情景</strong>：一键切换夜间、休闲、阅读与专注模式。</li>
+              <li><strong class="text-white">米家扫码快速导入</strong>：免抓包自动拉取挂灯 IP 与通信凭据。</li>
+            </ul>
+          </div>
+        </div>
+
+      </article>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-12 border-t border-white/10 bg-black/80 text-slate-400 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+      
+      <div class="flex items-center gap-3">
+        <img src="assets/32.png" alt="MiBar" class="w-6 h-6 rounded-md">
+        <span class="font-bold text-white">MiBar</span>
+        <span>— 专为 macOS 设计的米家智能显示器挂灯 1S 控制器</span>
+      </div>
+
+      <div class="flex items-center gap-6 text-xs">
+        <a href="index.html" class="hover:text-white transition-colors no-underline text-slate-400">首页</a>
+        <a href="changelog.html" class="hover:text-white transition-colors no-underline text-amber-400 font-medium">更新日志</a>
+        <a href="https://github.com/extrastu/MiBar" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors no-underline text-slate-400">GitHub</a>
+        <a href="https://github.com/extrastu/MiBar/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors no-underline text-slate-400">MIT License</a>
+      </div>
+
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
