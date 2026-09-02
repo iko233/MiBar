@@ -126,6 +126,23 @@ open MiBar.xcodeproj
 
 在 Xcode 中选择 `My Mac` 作为目标平台，按下 `Cmd + R` 即可构建并运行。
 
+### 打包与公证
+
+项目提供了全自动的编译、Hardened Runtime 签名、DMG/ZIP 制作与 Apple 公证脚本：
+
+```bash
+# 1. 仅本地打包（跳过公证）
+./scripts/package.sh --skip-notarize
+
+# 2. 完整签名、打包并提交 Apple 官方公证（使用保存在 Keychain 的凭据 Profile）
+./scripts/package.sh --profile "your-notary-profile"
+
+# 3. 指定输出格式（dmg / zip / all）
+./scripts/package.sh --format dmg --skip-notarize
+```
+
+打包产物将自动输出至 `./dist` 目录，命名遵循 `<AppName>-<Version>.<ext>`（如 `MiBar-1.0.dmg`、`MiBar-1.0.zip`）。
+
 ---
 
 ## 📜 许可证

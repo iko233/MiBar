@@ -1,3 +1,5 @@
 .build
 .wrangler
 .DS_Store
+build/
+dist/
