@@ -95,14 +95,19 @@ MiBar/
 │   │   ├── MiIOPacket.swift         # miIO 报文帧编解码
 │   │   └── DatagramTransport.swift  # 基于 Network.framework 的 UDP 通信层
 │   └── Storage/
-│       └── KeychainStore.swift      # 基于 macOS Keychain 的安全 Token 存储
+│       └── KeychainStore.swift      # 本地安全配置与 Token 存储 (LocalConfigStore)
 ├── Store/
 │   └── LightStore.swift             # 全局状态管理，串联 UI、本地 miIO 与云端登录
 ├── Views/
-│   ├── LightMenuView.swift          # 菜单栏主弹窗视图与配置页
+│   ├── LightMenuView.swift          # 菜单栏主弹窗协调视图
 │   ├── Components/
+│   │   ├── LightMenuHeaderView.swift       # 顶部状态与总控开关
 │   │   ├── LightControlCapsuleSlider.swift # 自定义触控胶囊滑块
-│   │   └── LightPresetsView.swift   # 情景预设快捷视图
+│   │   ├── SceneGlassButton.swift          # 快捷场景毛玻璃按钮与区块
+│   │   ├── LightMenuFooterView.swift       # 底部设置与操作列表
+│   │   ├── LightConfigurationView.swift    # 设备参数配置与扫码导入页
+│   │   ├── MiBarButtonStyles.swift         # 全局通用按钮样式与菜单行
+│   │   └── LightPresetsView.swift          # 情景预设矩阵视图
 │   └── MenuBar/
 │       ├── AboutModal.swift         # 关于 MiBar 弹窗视图
 │       ├── MenuBarModal.swift       # 菜单内嵌确认弹窗
