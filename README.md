@@ -11,6 +11,10 @@
   <img src="https://img.shields.io/badge/License-MIT-purple?style=flat-square" alt="License MIT" />
 </p>
 
+<p align="center">
+  <img src="assets/preview.png" alt="MiBar 效果图" width="520" />
+</p>
+
 ---
 
 **MiBar** 是一款轻量、优雅的 macOS 菜单栏应用，让你可以直接在 Mac 菜单栏中无缝调节**米家智能显示器挂灯 1S**（型号：`yeelink.light.lamp22`）的开关、亮度、色温以及预设情景模式。
