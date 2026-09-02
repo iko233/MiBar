@@ -72,22 +72,41 @@ struct AboutModal: View {
 
                 // Links & Copyright
                 VStack(spacing: 8) {
-                    Button {
-                        if let url = URL(string: "https://github.com/extrastu/MiBar") {
-                            NSWorkspace.shared.open(url)
+                    HStack(spacing: 16) {
+                        Button {
+                            if let url = URL(string: "https://mibar.pages.dev/") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "safari")
+                                    .font(.system(size: 10.5, weight: .medium))
+                                Text("官方网站")
+                                    .font(.system(size: 11, weight: .medium))
+                                Image(systemName: "arrow.up.right")
+                                    .font(.system(size: 8, weight: .semibold))
+                            }
+                            .foregroundStyle(Color.accentColor)
                         }
-                    } label: {
-                        HStack(spacing: 5) {
-                            Image(systemName: "link")
-                                .font(.system(size: 10.5, weight: .medium))
-                            Text("GitHub 仓库")
-                                .font(.system(size: 11, weight: .medium))
-                            Image(systemName: "arrow.up.right")
-                                .font(.system(size: 8.5, weight: .semibold))
+                        .buttonStyle(.plain)
+
+                        Button {
+                            if let url = URL(string: "https://github.com/extrastu/MiBar") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "link")
+                                    .font(.system(size: 10.5, weight: .medium))
+                                Text("GitHub 仓库")
+                                    .font(.system(size: 11, weight: .medium))
+                                Image(systemName: "arrow.up.right")
+                                    .font(.system(size: 8, weight: .semibold))
+                            }
+                            .foregroundStyle(Color.accentColor)
                         }
-                        .foregroundStyle(Color.accentColor)
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
 
                     Text("MIT License · Copyright © 2026 extrastu")
                         .font(.system(size: 9.5))

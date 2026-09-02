@@ -5,6 +5,7 @@
 </p>
 
 <p align="center">
+  <a href="https://mibar.pages.dev/"><img src="https://img.shields.io/badge/Website-mibar.pages.dev-007AFF?style=flat-square&logo=safari&logoColor=white" alt="Website" /></a>
   <img src="https://img.shields.io/badge/Platform-macOS-blue?style=flat-square&logo=apple" alt="Platform macOS" />
   <img src="https://img.shields.io/badge/Swift-6.0-orange?style=flat-square&logo=swift" alt="Swift 6.0" />
   <img src="https://img.shields.io/badge/Protocol-miIO%20%2F%20MIoT-green?style=flat-square" alt="Protocol miIO / MIoT" />
@@ -18,6 +19,9 @@
 ---
 
 **MiBar** 是一款轻量、优雅的 macOS 菜单栏应用，让你可以直接在 Mac 菜单栏中无缝调节**米家智能显示器挂灯 1S**（型号：`yeelink.light.lamp22`）的开关、亮度、色温以及预设情景模式。
+
+- 🌐 **官方主页**：[https://mibar.pages.dev/](https://mibar.pages.dev/)
+- 📦 **最新发布**：[GitHub Releases](https://github.com/extrastu/MiBar/releases)
 
 无需每次打开手机 App 或使用物理旋钮，随时在桌面即可完成灯光调控。
 
@@ -146,6 +150,16 @@ open MiBar.xcodeproj
 ```
 
 打包产物将自动输出至 `./dist` 目录，命名遵循 `<AppName>-<Version>.<ext>`（如 `MiBar-1.0.dmg`、`MiBar-1.0.zip`）。
+
+---
+
+## 🌐 官方网站
+
+欢迎访问 MiBar 官方主页：**[https://mibar.pages.dev/](https://mibar.pages.dev/)**
+
+- 💡 **在线功能特性演示**：直观了解 UI 设计、滑动微调动效与情景模式。
+- 📖 **配对与常见问题（FAQ）**：详细的扫码配对排查指引与 miIO 协议说明。
+- 📦 **快速下载**：一键获取适用于 macOS 的最新 DMG 安装镜像。
 
 ---
 
