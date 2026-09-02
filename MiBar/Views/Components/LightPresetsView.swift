@@ -103,13 +103,36 @@ struct LightPresetsView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background {
                             RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .fill(isCurrent ? preset.accentColor.opacity(0.16) : Color.primary.opacity(0.04))
+                                .fill(.ultraThinMaterial)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                        .fill(isCurrent ? preset.accentColor.opacity(0.18) : Color.primary.opacity(0.035))
+                                }
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                        .fill(
+                                            LinearGradient(
+                                                colors: [
+                                                    Color.white.opacity(isCurrent ? 0.28 : 0.10),
+                                                    Color.clear
+                                                ],
+                                                startPoint: .top,
+                                                endPoint: .center
+                                            )
+                                        )
+                                }
                         }
                         .overlay {
                             RoundedRectangle(cornerRadius: 12, style: .continuous)
                                 .strokeBorder(
-                                    isCurrent ? preset.accentColor.opacity(0.5) : Color.primary.opacity(0.06),
-                                    lineWidth: 1
+                                    LinearGradient(
+                                        colors: isCurrent
+                                            ? [preset.accentColor.opacity(0.65), preset.accentColor.opacity(0.25)]
+                                            : [Color.primary.opacity(0.14), Color.primary.opacity(0.04)],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ),
+                                    lineWidth: isCurrent ? 1.0 : 0.8
                                 )
                         }
                     }

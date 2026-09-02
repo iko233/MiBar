@@ -29,10 +29,10 @@ final class LightStore {
     private var cloudLoginTask: Task<Void, Never>?
     private var cloudLoginGeneration = 0
 
-    /// 从本机偏好设置和钥匙串恢复设备配置。
+    /// 从本机偏好设置恢复设备配置。
     init() {
         let savedHost = UserDefaults.standard.string(forKey: "deviceHost") ?? ""
-        let savedToken = (try? KeychainStore.readToken()) ?? ""
+        let savedToken = LocalConfigStore.readToken() ?? ""
         host = savedHost
         tokenHex = savedToken
         isEditingConfiguration = savedHost.isEmpty || savedToken.isEmpty
@@ -76,7 +76,7 @@ final class LightStore {
         }
     }
 
-    /// 把 IP/token 写入内存、钥匙串和偏好设置，不立刻访问局域网。
+    /// 把 IP/token 写入内存和本地偏好设置，不立刻访问局域网。
     func applyConfiguration(host rawHost: String, token rawToken: String) throws {
         let normalizedHost = rawHost.trimmingCharacters(in: .whitespacesAndNewlines)
         let normalizedToken = rawToken.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -86,17 +86,17 @@ final class LightStore {
             client = nil
             isEditingConfiguration = true
             if Data(hexString: normalizedToken)?.count == 16 {
-                try KeychainStore.saveToken(normalizedToken)
+                LocalConfigStore.saveToken(normalizedToken)
             }
             logger.info("ℹ️ [LightStore] 配置已清空或 IP 为空")
             return
         }
         let newClient = try MiIOClient(host: normalizedHost, tokenHex: normalizedToken)
-        try KeychainStore.saveToken(normalizedToken)
+        LocalConfigStore.saveToken(normalizedToken)
         UserDefaults.standard.set(normalizedHost, forKey: "deviceHost")
         client = newClient
         isEditingConfiguration = false
-        logger.info("✅ [LightStore] 成功写入新配置到钥匙串与偏好设置: host=\(normalizedHost)")
+        logger.info("✅ [LightStore] 成功写入新配置到本地存储: host=\(normalizedHost)")
     }
 
     /// 删除本机保存的 IP/token，方便重新扫码或手工配置。
@@ -115,14 +115,9 @@ final class LightStore {
         isEditingConfiguration = true
         cloudLoginStatus = ""
         UserDefaults.standard.removeObject(forKey: "deviceHost")
-        do {
-            try KeychainStore.deleteToken()
-            statusText = "已删除本机配置"
-            logger.info("✅ [LightStore] 已成功清除钥匙串与偏好设置中的配置")
-        } catch {
-            logger.error("❌ [LightStore] 删除钥匙串配置失败: \(error.localizedDescription)")
-            show(error)
-        }
+        LocalConfigStore.deleteToken()
+        statusText = "已删除本机配置"
+        logger.info("✅ [LightStore] 已成功清除本地配置")
     }
 
     /// 导入用户选中的挂灯 IP/token 并交给现有配置流程保存。

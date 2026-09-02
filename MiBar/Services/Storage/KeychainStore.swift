@@ -1,77 +1,26 @@
 import Foundation
-import Security
 
-nonisolated enum KeychainStoreError: LocalizedError, Sendable {
-    case unexpectedStatus(OSStatus)
+/// 本地设备配置与 Token 存储管理（基于本地 UserDefaults 存储，避免每次弹出 macOS 钥匙串授权密码对话框）
+nonisolated enum LocalConfigStore {
+    private static let tokenKey = "deviceToken"
+    private static let hostKey = "deviceHost"
 
-    /// 返回适合界面展示的钥匙串错误说明。
-    var errorDescription: String? {
-        switch self {
-        case let .unexpectedStatus(status):
-            return "钥匙串操作失败（\(status)）"
-        }
+    /// 读取保存在本地的设备 token。
+    static func readToken() -> String? {
+        UserDefaults.standard.string(forKey: tokenKey)
+    }
+
+    /// 新增或更新保存在本地的设备 token。
+    static func saveToken(_ token: String) {
+        UserDefaults.standard.set(token, forKey: tokenKey)
+    }
+
+    /// 删除保存在本地的设备 token。
+    static func deleteToken() {
+        UserDefaults.standard.removeObject(forKey: tokenKey)
     }
 }
 
-nonisolated enum KeychainStore {
-    private static let service = "com.extrastu.mibar"
-    private static let account = "device-token"
+/// 兼容别名
+typealias KeychainStore = LocalConfigStore
 
-    /// 读取保存在钥匙串中的设备 token。
-    static func readToken() throws -> String? {
-        let query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: account,
-            kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne,
-        ]
-        var item: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &item)
-        if status == errSecItemNotFound { return nil }
-        guard status == errSecSuccess,
-              let data = item as? Data,
-              let token = String(data: data, encoding: .utf8)
-        else {
-            throw KeychainStoreError.unexpectedStatus(status)
-        }
-        return token
-    }
-
-    /// 新增或更新钥匙串中的设备 token。
-    static func saveToken(_ token: String) throws {
-        let key: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: account,
-        ]
-        let attributes: [String: Any] = [
-            kSecValueData as String: Data(token.utf8),
-        ]
-        let updateStatus = SecItemUpdate(key as CFDictionary, attributes as CFDictionary)
-        if updateStatus == errSecSuccess { return }
-        guard updateStatus == errSecItemNotFound else {
-            throw KeychainStoreError.unexpectedStatus(updateStatus)
-        }
-
-        var newItem = key
-        newItem[kSecValueData as String] = Data(token.utf8)
-        let addStatus = SecItemAdd(newItem as CFDictionary, nil)
-        guard addStatus == errSecSuccess else {
-            throw KeychainStoreError.unexpectedStatus(addStatus)
-        }
-    }
-
-    /// 删除钥匙串中的设备 token，条目不存在时视为已清除。
-    static func deleteToken() throws {
-        let key: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: account,
-        ]
-        let status = SecItemDelete(key as CFDictionary)
-        guard status == errSecSuccess || status == errSecItemNotFound else {
-            throw KeychainStoreError.unexpectedStatus(status)
-        }
-    }
-}

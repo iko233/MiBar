@@ -225,65 +225,16 @@ struct LightMenuView: View {
                                 - preset.colorTemperature
                         ) <= 150
 
-                    Button {
+                    SceneGlassButton(
+                        preset: preset,
+                        isSelected: isSelected,
+                        isEnabled: store.state.isOn
+                    ) {
                         store.applyPreset(
-                            colorTemperature:
-                                preset.colorTemperature,
-                            brightness:
-                                preset.brightness
+                            colorTemperature: preset.colorTemperature,
+                            brightness: preset.brightness
                         )
-                    } label: {
-                        HStack(spacing: 5) {
-                            Image(systemName: preset.icon)
-                                .font(
-                                    .system(
-                                        size: 10,
-                                        weight: .semibold
-                                    )
-                                )
-
-                            Text(preset.title)
-                                .font(
-                                    .system(
-                                        size: 10.5,
-                                        weight: .medium
-                                    )
-                                )
-                                .lineLimit(1)
-                        }
-                        .foregroundStyle(
-                            isSelected
-                                ? Color.primary
-                                : Color.secondary
-                        )
-                        .frame(
-                            maxWidth: .infinity,
-                            minHeight: 28
-                        )
-                        .background {
-                            Capsule()
-                                .fill(
-                                    isSelected
-                                        ? Color.primary.opacity(0.12)
-                                        : Color.primary.opacity(0.045)
-                            )
-                        }
-                        .overlay {
-                            if isSelected {
-                                Capsule()
-                                    .strokeBorder(
-                                        Color.primary.opacity(0.07),
-                                        lineWidth: 0.5
-                                    )
-                            }
-                        }
-                        .contentShape(Capsule())
                     }
-                    .buttonStyle(.plain)
-                    .disabled(!store.state.isOn)
-                    .help(
-                        "\(preset.title) · \(preset.subtitle)"
-                    )
                 }
             }
         }
@@ -651,6 +602,104 @@ struct LightMenuView: View {
 
             Spacer()
         }
+    }
+}
+
+// MARK: - Scene Glass Button
+
+private struct SceneGlassButton: View {
+    let preset: LightPresetItem
+    let isSelected: Bool
+    let isEnabled: Bool
+    let action: () -> Void
+
+    @State private var isHovered = false
+
+    private var foregroundColor: Color {
+        guard isEnabled else {
+            return .secondary.opacity(0.45)
+        }
+
+        if isSelected {
+            return preset.accentColor
+        }
+
+        return isHovered ? .primary : .secondary
+    }
+
+    private var tintOpacity: Double {
+        if !isEnabled { return 0.02 }
+        if isSelected { return 0.16 }
+        if isHovered { return 0.07 }
+        return 0.025
+    }
+
+    private var borderOpacity: Double {
+        if !isEnabled { return 0.05 }
+        if isHovered { return 0.16 }
+        return 0.09
+    }
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 6) {
+                Image(systemName: preset.icon)
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(
+                        isSelected ? preset.accentColor : foregroundColor
+                    )
+
+                Text(preset.title)
+                    .font(.system(
+                        size: 10.5,
+                        weight: isSelected ? .semibold : .medium
+                    ))
+                    .foregroundStyle(
+                        isSelected ? .primary : foregroundColor
+                    )
+                    .lineLimit(1)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 28)
+            .background {
+                Capsule(style: .continuous)
+                    .fill(.ultraThinMaterial)
+                    .overlay {
+                        Capsule(style: .continuous)
+                            .fill(
+                                isSelected
+                                    ? preset.accentColor.opacity(tintOpacity)
+                                    : Color.primary.opacity(tintOpacity)
+                            )
+                    }
+            }
+            .overlay {
+                Capsule(style: .continuous)
+                    .strokeBorder(
+                        isSelected
+                            ? preset.accentColor.opacity(0.35)
+                            : Color.primary.opacity(borderOpacity),
+                        lineWidth: 0.75
+                    )
+            }
+            .contentShape(Capsule(style: .continuous))
+            .scaleEffect(isHovered && isEnabled ? 1.015 : 1)
+            .opacity(isEnabled ? 1 : 0.6)
+        }
+        .buttonStyle(.plain)
+        .disabled(!isEnabled)
+        .onHover { hovering in
+            isHovered = isEnabled && hovering
+        }
+        .animation(
+            .snappy(duration: 0.18),
+            value: isHovered
+        )
+        .animation(
+            .snappy(duration: 0.22),
+            value: isSelected
+        )
+        .help("\(preset.title) · \(preset.subtitle)")
     }
 }
 
