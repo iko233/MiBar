@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mibar.pages.dev/sitemap.xml
