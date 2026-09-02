@@ -147,84 +147,28 @@ struct LightMenuView: View {
     // MARK: - Brightness
 
     private var brightnessSection: some View {
-        VStack(spacing: 11) {
-            ZStack {
-                Circle()
-                    .fill(Color.primary.opacity(0.055))
-                    .frame(width: 60, height: 60)
-
-                Image(systemName: brightnessIcon)
-                    .font(.system(size: 25, weight: .medium))
-                    .foregroundStyle(
-                        store.state.isOn
-                            ? Color.primary
-                            : Color.secondary
-                    )
+        LightControlCapsuleSlider.brightness(
+            value: Binding(
+                get: {
+                    Double(store.state.brightness)
+                },
+                set: {
+                    store.scheduleBrightness(Int($0.rounded()))
+                }
+            ),
+            systemImage: brightnessIcon,
+            isEnabled: store.state.isOn,
+            onChanged: { newValue in
+                store.scheduleBrightness(Int(newValue.rounded()))
             }
-
-            VStack(spacing: 1) {
-                Text("\(store.state.brightness)%")
-                    .font(
-                        .system(
-                            size: 26,
-                            weight: .medium,
-                            design: .rounded
-                        )
-                    )
-                    .monospacedDigit()
-                    .contentTransition(.numericText())
-
-                Text("亮度")
-                    .font(.system(size: 10.5))
-                    .foregroundStyle(.secondary)
-            }
-
-            Slider(
-                value: Binding(
-                    get: {
-                        Double(store.state.brightness)
-                    },
-                    set: {
-                        store.scheduleBrightness(Int($0.rounded()))
-                    }
-                ),
-                in: 1...100,
-                step: 1
-            )
-            .controlSize(.small)
-            .disabled(!store.state.isOn)
-        }
-        .opacity(store.state.isOn ? 1 : 0.45)
-        .animation(
-            .easeInOut(duration: 0.18),
-            value: store.state.isOn
         )
     }
 
     // MARK: - Temperature
 
     private var temperatureSection: some View {
-        VStack(spacing: 8) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("色温")
-                    .font(.system(size: 11.5, weight: .medium))
-                    .foregroundStyle(.primary)
-
-                Spacer()
-
-                Text("\(store.state.colorTemperature) K")
-                    .font(
-                        .system(
-                            size: 11,
-                            weight: .medium
-                        )
-                    )
-                    .monospacedDigit()
-                    .foregroundStyle(.secondary)
-                    .contentTransition(.numericText())
-            }
-
-            Slider(
+        VStack(spacing: 6) {
+            LightControlCapsuleSlider.colorTemperature(
                 value: Binding(
                     get: {
                         Double(store.state.colorTemperature)
@@ -235,23 +179,24 @@ struct LightMenuView: View {
                         )
                     }
                 ),
-                in: 2_700...6_500,
-                step: 50
+                isEnabled: store.state.isOn,
+                onChanged: { newValue in
+                    store.scheduleColorTemperature(
+                        Int(newValue.rounded())
+                    )
+                }
             )
-            .controlSize(.small)
-            .disabled(!store.state.isOn)
 
             HStack {
-                Text("暖")
+                Text("暖 2700K")
                 Spacer()
-                Text("中性")
+                Text("中性 4000K")
                 Spacer()
-                Text("冷")
+                Text("冷 6500K")
             }
             .font(.system(size: 9.5))
             .foregroundStyle(.tertiary)
         }
-        .opacity(store.state.isOn ? 1 : 0.45)
     }
 
     // MARK: - Presets
