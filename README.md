@@ -42,9 +42,9 @@
 
 ## 🛠️ 支持设备
 
-| 设备型号 | 型号标识 (Model Identifier) | 连接方式 |
-| :--- | :--- | :--- |
-| **米家智能显示器挂灯 1S** | `yeelink.light.lamp22` | 局域网 miIO (UDP 54321) |
+| 设备型号                  | 型号标识 (Model Identifier) | 连接方式                |
+| :------------------------ | :-------------------------- | :---------------------- |
+| **米家智能显示器挂灯 1S** | `yeelink.light.lamp22`      | 局域网 miIO (UDP 54321) |
 
 ---
 
@@ -60,6 +60,7 @@
 ### 2. 手动填写配置
 
 如果你已有通过抓包或网关获取的设备 IP 和 Token：
+
 1. 打开配置页面，在输入框中填入：
    - **设备 IP**：挂灯在当前局域网分配的 IPv4 地址（如 `192.168.1.100`）。
    - **设备 Token**：32 位十六进制字符串（由 16 字节密钥转换而来）。
@@ -95,6 +96,7 @@ MiBar/
 │   │   ├── LightControlCapsuleSlider.swift # 自定义触控胶囊滑块
 │   │   └── LightPresetsView.swift   # 情景预设快捷视图
 │   └── MenuBar/
+│       ├── AboutModal.swift         # 关于 MiBar 弹窗视图
 │       ├── MenuBarModal.swift       # 菜单内嵌确认弹窗
 │       └── MenuBarWindowSizing.swift# 自适应窗口尺寸与毛玻璃适配
 └── Utilities/
@@ -128,4 +130,4 @@ open MiBar.xcodeproj
 
 ## 📜 许可证
 
-本项目采用 [MIT License](LICENSE) 开源许可证。
+本项目采用 [MIT License](LICENSE) 开源许可证，仅用于学习和技术交流。

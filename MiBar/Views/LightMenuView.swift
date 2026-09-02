@@ -4,6 +4,7 @@ import SwiftUI
 struct LightMenuView: View {
     @Bindable var store: LightStore
     @State private var isConfirmingClearConfiguration = false
+    @State private var isShowingAbout = false
     @State private var isTokenVisible = false
     @State private var isBackHovered = false
 
@@ -50,9 +51,13 @@ struct LightMenuView: View {
                     }
                 )
                 .transition(.opacity.combined(with: .scale(scale: 0.96)))
+            } else if isShowingAbout {
+                AboutModal(onDismiss: { isShowingAbout = false })
+                    .transition(.opacity.combined(with: .scale(scale: 0.96)))
             }
         }
         .animation(.spring(response: 0.28, dampingFraction: 0.84), value: isConfirmingClearConfiguration)
+        .animation(.spring(response: 0.28, dampingFraction: 0.84), value: isShowingAbout)
         .animation(.spring(response: 0.28, dampingFraction: 0.84), value: store.isEditingConfiguration)
         .animation(.spring(response: 0.28, dampingFraction: 0.84), value: store.state.isOn)
         .background {
@@ -308,6 +313,20 @@ struct LightMenuView: View {
                 Task {
                     await store.refresh()
                 }
+            }
+
+            MenuItemRow(
+                title: "关于 MiBar",
+                icon: "info.circle"
+            ) {
+                isShowingAbout = true
+            }
+
+            MenuItemRow(
+                title: "退出 MiBar",
+                icon: "power"
+            ) {
+                NSApp.terminate(nil)
             }
         }
     }
