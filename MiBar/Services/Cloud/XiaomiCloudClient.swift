@@ -1,7 +1,7 @@
 import Foundation
 import OSLog
 
-enum XiaomiCloudError: LocalizedError {
+nonisolated enum XiaomiCloudError: LocalizedError, Sendable {
     case invalidResponse(String)
     case httpFailure(Int)
     case qrExpired

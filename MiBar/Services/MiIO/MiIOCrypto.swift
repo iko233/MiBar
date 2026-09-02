@@ -2,7 +2,7 @@ import CommonCrypto
 import CryptoKit
 import Foundation
 
-enum MiIOCryptoError: LocalizedError {
+nonisolated enum MiIOCryptoError: LocalizedError, Sendable {
     case invalidToken
     case cryptFailed(CCCryptorStatus)
 
@@ -17,7 +17,7 @@ enum MiIOCryptoError: LocalizedError {
     }
 }
 
-enum MiIOCrypto {
+nonisolated enum MiIOCrypto {
     /// 计算 miIO 校验和及密钥派生所需的 MD5。
     static func md5(_ data: Data) -> Data {
         Data(Insecure.MD5.hash(data: data))

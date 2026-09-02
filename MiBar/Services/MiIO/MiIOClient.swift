@@ -3,7 +3,7 @@ import os.log
 
 private let logger = Logger(subsystem: "MiBar", category: "MiIOClient")
 
-enum MiIOClientError: LocalizedError {
+nonisolated enum MiIOClientError: LocalizedError, Sendable {
     case commandFailed(code: Int, message: String?)
     case propertyMissing(String)
 

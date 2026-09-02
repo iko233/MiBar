@@ -4,7 +4,7 @@ import os.log
 
 private let logger = Logger(subsystem: "MiBar", category: "DatagramTransport")
 
-enum DatagramTransportError: LocalizedError {
+nonisolated enum DatagramTransportError: LocalizedError, Sendable {
     case invalidAddress
     case socketFailure(String)
     case timeout
@@ -22,7 +22,7 @@ enum DatagramTransportError: LocalizedError {
     }
 }
 
-enum DatagramTransport {
+nonisolated enum DatagramTransport {
     /// 在后台线程执行一次 UDP 请求并等待单个响应。
     static func exchange(_ payload: Data, host: String, port: UInt16 = 54_321, timeout: TimeInterval = 3) async throws -> Data {
         logger.debug("🌐 [UDP] 准备发送数据到 \(host):\(port)，字节数: \(payload.count)")

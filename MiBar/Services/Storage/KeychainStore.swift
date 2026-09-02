@@ -1,7 +1,7 @@
 import Foundation
 import Security
 
-enum KeychainStoreError: LocalizedError {
+nonisolated enum KeychainStoreError: LocalizedError, Sendable {
     case unexpectedStatus(OSStatus)
 
     /// 返回适合界面展示的钥匙串错误说明。
@@ -13,7 +13,7 @@ enum KeychainStoreError: LocalizedError {
     }
 }
 
-enum KeychainStore {
+nonisolated enum KeychainStore {
     private static let service = "com.extrastu.mibar"
     private static let account = "device-token"
 

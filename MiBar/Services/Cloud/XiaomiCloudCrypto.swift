@@ -2,7 +2,7 @@ import CryptoKit
 import Foundation
 import Security
 
-enum XiaomiCloudCryptoError: LocalizedError {
+nonisolated enum XiaomiCloudCryptoError: LocalizedError, Sendable {
     case invalidBase64
     case invalidEndpoint
     case randomGenerationFailed(OSStatus)
@@ -20,7 +20,7 @@ enum XiaomiCloudCryptoError: LocalizedError {
     }
 }
 
-enum XiaomiCloudCrypto {
+nonisolated enum XiaomiCloudCrypto {
     /// 执行小米云使用的 RC4-drop1024 对称变换。
     static func rc4(key: Data, data: Data) -> Data {
         guard !key.isEmpty else { return Data() }

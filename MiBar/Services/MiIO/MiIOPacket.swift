@@ -1,6 +1,6 @@
 import Foundation
 
-enum MiIOPacketError: LocalizedError {
+nonisolated enum MiIOPacketError: LocalizedError, Sendable {
     case malformedPacket
     case invalidChecksum
     case invalidResponse
@@ -18,7 +18,7 @@ enum MiIOPacketError: LocalizedError {
     }
 }
 
-enum MiIOPacket {
+nonisolated enum MiIOPacket {
     static let hello = Data(hexString: "21310020ffffffffffffffffffffffffffffffffffffffffffffffffffffffff")!
 
     /// 解析 32 字节握手响应中的设备 ID 和设备时间。

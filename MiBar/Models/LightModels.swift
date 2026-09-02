@@ -1,14 +1,14 @@
 import Foundation
 
 /// 挂灯当前可控状态。
-struct LightState: Sendable, Equatable {
+nonisolated struct LightState: Sendable, Equatable {
     var isOn = false
     var brightness = 50
     var colorTemperature = 4_000
 }
 
 /// MIoT 请求和响应使用的 JSON 值。
-enum JSONValue: Codable, Sendable, Equatable {
+nonisolated enum JSONValue: Codable, Sendable, Equatable {
     case bool(Bool)
     case int(Int)
     case double(Double)
@@ -73,7 +73,7 @@ enum JSONValue: Codable, Sendable, Equatable {
 }
 
 /// 单个 MIoT 属性参数。
-struct MiIOPropertyParameter: Encodable, Sendable {
+nonisolated struct MiIOPropertyParameter: Encodable, Sendable {
     let did: String
     let siid: Int
     let piid: Int
@@ -94,14 +94,14 @@ struct MiIOPropertyParameter: Encodable, Sendable {
 }
 
 /// miIO 命令请求体。
-struct MiIORequest: Encodable, Sendable {
+nonisolated struct MiIORequest: Encodable, Sendable {
     let id: Int
     let method: String
     let params: [MiIOPropertyParameter]
 }
 
 /// MIoT 单个属性响应。
-struct MiIOPropertyResult: Decodable, Sendable {
+nonisolated struct MiIOPropertyResult: Decodable, Sendable {
     let did: String?
     let siid: Int?
     let piid: Int?
@@ -110,20 +110,20 @@ struct MiIOPropertyResult: Decodable, Sendable {
 }
 
 /// miIO 错误响应。
-struct MiIOResponseError: Decodable, Sendable {
+nonisolated struct MiIOResponseError: Decodable, Sendable {
     let code: Int
     let message: String?
 }
 
 /// miIO 命令响应体。
-struct MiIOResponse: Decodable, Sendable {
+nonisolated struct MiIOResponse: Decodable, Sendable {
     let id: Int?
     let result: [MiIOPropertyResult]?
     let error: MiIOResponseError?
 }
 
 /// 握手返回的设备标识和时钟。
-struct MiIOHandshake: Sendable {
+nonisolated struct MiIOHandshake: Sendable {
     let deviceID: UInt32
     let timestamp: UInt32
     let receivedAt: Date

@@ -1,7 +1,7 @@
 import Foundation
 
 /// 小米二维码登录挑战。
-struct XiaomiQRChallenge: Sendable {
+nonisolated struct XiaomiQRChallenge: Sendable {
     let imageData: Data
     let loginURL: URL
     let pollingURL: URL
@@ -9,14 +9,14 @@ struct XiaomiQRChallenge: Sendable {
 }
 
 /// 小米云短期登录会话，仅在内存中使用。
-struct XiaomiCloudSession: Sendable {
+nonisolated struct XiaomiCloudSession: Sendable {
     let userID: String
     let ssecurity: String
     let serviceToken: String
 }
 
 /// 小米云设备列表中的必要字段。
-struct XiaomiCloudDevice: Decodable, Sendable, Identifiable, Equatable {
+nonisolated struct XiaomiCloudDevice: Decodable, Sendable, Identifiable, Equatable {
     let did: String
     let name: String
     let model: String
@@ -97,7 +97,7 @@ struct XiaomiCloudDevice: Decodable, Sendable, Identifiable, Equatable {
 }
 
 /// 小米二维码端点返回的挑战信息。
-struct XiaomiQRPayload: Decodable, Sendable {
+nonisolated struct XiaomiQRPayload: Decodable, Sendable {
     let qr: URL
     let loginURL: URL
     let pollingURL: URL
@@ -111,7 +111,7 @@ struct XiaomiQRPayload: Decodable, Sendable {
 }
 
 /// 扫码确认后返回的账户会话字段。
-struct XiaomiAuthorizationPayload: Decodable, Sendable {
+nonisolated struct XiaomiAuthorizationPayload: Decodable, Sendable {
     let userID: String
     let ssecurity: String
     let location: URL
@@ -135,11 +135,11 @@ struct XiaomiAuthorizationPayload: Decodable, Sendable {
 }
 
 /// 小米设备列表响应的最小结构。
-struct XiaomiDeviceListEnvelope: Decodable, Sendable {
+nonisolated struct XiaomiDeviceListEnvelope: Decodable, Sendable {
     let result: ResultPayload?
 
     /// 小米设备列表响应中的 result。
-    struct ResultPayload: Decodable, Sendable {
+    nonisolated struct ResultPayload: Decodable, Sendable {
         let list: [XiaomiCloudDevice]?
     }
 }
