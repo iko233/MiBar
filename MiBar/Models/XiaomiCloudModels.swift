@@ -143,3 +143,29 @@ nonisolated struct XiaomiDeviceListEnvelope: Decodable, Sendable {
         let list: [XiaomiCloudDevice]?
     }
 }
+
+/// 小米设备 BeaconKey 响应。
+nonisolated struct XiaomiBeaconKeyResponse: Decodable, Sendable {
+    let code: Int?
+    let message: String?
+    let result: ResultPayload?
+
+    nonisolated struct ResultPayload: Decodable, Sendable {
+        let did: String?
+        let beaconkey: String?
+    }
+}
+
+extension XiaomiCloudDevice {
+    /// 是否为米家温湿度计系列（如 MJWSD05MMC、miaomiaoce.sensor_ht 系列等）。
+    var isThermometer: Bool {
+        let lowerModel = model.lowercased()
+        let lowerName = name.lowercased()
+        return lowerModel.contains("sensor_ht")
+            || lowerModel.contains("mjwsd")
+            || lowerModel.contains("lywsd")
+            || lowerName.contains("温湿度计")
+            || lowerName.contains("温度计")
+    }
+}
+

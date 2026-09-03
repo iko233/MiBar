@@ -17,8 +17,34 @@ final class LightStore {
     var qrImageData: Data?
     var qrLoginURL: URL?
     var cloudDevices: [XiaomiCloudDevice] = []
+    var scannedCloudThermometers: [CloudThermometerRecord] = []
     var cloudLoginStatus = ""
     var isCloudLoginActive = false
+    var onThermometerDiscovered: (@MainActor (XiaomiCloudDevice, String) -> Void)?
+    var onCloudThermometersDiscovered: (@MainActor ([CloudThermometerRecord]) -> Void)?
+
+    /// 是否已配置挂灯
+    var isLightConfigured: Bool {
+        !host.isEmpty && !tokenHex.isEmpty
+    }
+
+    /// 外部指定跳转进入详情页的温湿度计 MAC
+    var targetDetailDeviceMAC: String? = nil
+
+    enum ConfigurationTab: String, CaseIterable, Identifiable {
+        case light = "挂灯 1S"
+        case thermometer = "温湿度计 3"
+
+        var id: String { rawValue }
+        var icon: String {
+            switch self {
+            case .light: return "lightbulb"
+            case .thermometer: return "thermometer.medium"
+            }
+        }
+    }
+
+    var selectedConfigurationTab: ConfigurationTab = .light
 
     private var client: MiIOClient?
     private var activeOperations = 0
@@ -281,6 +307,18 @@ final class LightStore {
         }
     }
 
+    /// 移除当前挂灯设备配置
+    func removeLightDevice() {
+        host = ""
+        tokenHex = ""
+        UserDefaults.standard.removeObject(forKey: "deviceHost")
+        LocalConfigStore.deleteToken()
+        client = nil
+        isConnected = false
+        statusText = "未配置"
+        logger.info("🗑️ [LightStore] 已移除挂灯设备配置")
+    }
+
     /// 完成二维码展示、授权轮询与挂灯设备筛选。
     private func performCloudQRLogin(generation: Int) async {
         let cloudClient = XiaomiCloudClient()
@@ -306,15 +344,44 @@ final class LightStore {
             qrImageData = nil
             qrLoginURL = nil
             let reachable = lightBars.filter { !$0.localIP.isEmpty }
-            if reachable.count == 1, let device = reachable.first {
-                cloudLoginStatus = "已找到挂灯，正在保存并连接…"
-                await importCloudDevice(device)
-            } else if reachable.count > 1 {
-                cloudDevices = reachable
-                cloudLoginStatus = "找到多盏挂灯，请选择要控制的设备"
-            } else if let device = lightBars.first {
-                cloudLoginStatus = "已找到挂灯，云端未返回 IP，正在导入 token…"
-                await importCloudDevice(device)
+            cloudDevices = reachable.isEmpty ? lightBars : reachable
+            if !cloudDevices.isEmpty {
+                cloudLoginStatus = "已获取到设备列表，请选择要添加的设备"
+            }
+
+            // 检查米家账号下是否有米家温湿度计，若有则同步提取其 BeaconKey
+            let thermometers = devices.filter { $0.isThermometer }
+            if !thermometers.isEmpty {
+                logger.info("☁️ 云端共发现 \(thermometers.count) 个温湿度计相关设备，开始逐一查询 BeaconKey...")
+                var discoveredList: [(device: XiaomiCloudDevice, bindKey: String)] = []
+                var records: [CloudThermometerRecord] = []
+                for thermometer in thermometers {
+                    logger.info("  -> 扫描到温湿度计: [\(thermometer.name, privacy: .public)] (did: \(thermometer.did), model: \(thermometer.model, privacy: .public), MAC: \(thermometer.mac ?? "未提供", privacy: .public))")
+                    do {
+                        if let beaconKey = try await cloudClient.fetchBeaconKey(did: thermometer.did, using: cloudSession),
+                           !beaconKey.isEmpty {
+                            logger.info("  ✅ 成功获取 [\(thermometer.name, privacy: .public)] 的 BeaconKey")
+                            discoveredList.append((thermometer, beaconKey))
+                            records.append(CloudThermometerRecord(
+                                did: thermometer.did,
+                                name: thermometer.name,
+                                model: thermometer.model,
+                                mac: thermometer.mac,
+                                bindKey: beaconKey
+                            ))
+                        }
+                    } catch {
+                        logger.warning("  ⚠️ 获取温湿度计 [\(thermometer.name, privacy: .public)] BeaconKey 失败：\(error.localizedDescription, privacy: .public)")
+                    }
+                }
+                if !records.isEmpty {
+                    self.scannedCloudThermometers = records
+                    LocalConfigStore.saveCachedCloudThermometers(records)
+                    onCloudThermometersDiscovered?(records)
+                }
+                if let first = discoveredList.first {
+                    onThermometerDiscovered?(first.device, first.bindKey)
+                }
             }
         } catch {
             guard generation == cloudLoginGeneration else { return }

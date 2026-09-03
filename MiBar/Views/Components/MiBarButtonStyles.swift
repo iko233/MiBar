@@ -123,6 +123,7 @@ struct MiBarSecondaryButtonStyle: ButtonStyle {
             .font(.system(size: 12, weight: .medium))
             .foregroundStyle(Color.primary)
             .frame(height: 36)
+            .padding(.horizontal, 4)
             .background {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                     .fill(
@@ -152,6 +153,7 @@ struct MiBarDestructiveButtonStyle: ButtonStyle {
             .font(.system(size: 12, weight: .medium))
             .foregroundStyle(Color.red)
             .frame(height: 36)
+            .padding(.horizontal, 4)
             .background {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                     .fill(

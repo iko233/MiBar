@@ -4,6 +4,7 @@ import SwiftUI
 /// 挂灯菜单栏主视图：协调主控制、配置页以及弹窗浮层。
 struct LightMenuView: View {
     @Bindable var store: LightStore
+    @Bindable var thermometerStore: ThermometerStore
     @State private var isConfirmingClearConfiguration = false
     @State private var isShowingAbout = false
 
@@ -19,6 +20,7 @@ struct LightMenuView: View {
         }
         .task {
             await store.start()
+            thermometerStore.start()
         }
     }
 
@@ -28,6 +30,7 @@ struct LightMenuView: View {
             if store.isEditingConfiguration {
                 LightConfigurationView(
                     store: store,
+                    thermometerStore: thermometerStore,
                     isConfirmingClearConfiguration: $isConfirmingClearConfiguration
                 )
             } else {
@@ -80,6 +83,12 @@ struct LightMenuView: View {
         VStack(spacing: 0) {
             // MARK: - Header
             LightMenuHeaderView(store: store)
+
+            // MARK: - Thermometer Info Capsule
+            if thermometerStore.configuration.isValid {
+                ThermometerDashboardView(store: store, thermometerStore: thermometerStore)
+                    .padding(.top, 14)
+            }
 
             // MARK: - Main Brightness Control
             brightnessSection

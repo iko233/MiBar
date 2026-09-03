@@ -2,7 +2,7 @@ import AppKit
 import SwiftUI
 
 enum MenuBarWindowSizing {
-    static let menuWidth: CGFloat = 280
+    static let menuWidth: CGFloat = 350
     static let maxHeight: CGFloat = 620
 
     /// 将测量到的内容尺寸收敛到菜单栏弹窗允许的宽高。

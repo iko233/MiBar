@@ -128,11 +128,12 @@ actor XiaomiCloudClient {
         throw XiaomiCloudError.qrExpired
     }
 
-    /// 使用已授权会话读取中国大陆区域的设备列表。
-    func fetchDevices(using cloudSession: XiaomiCloudSession) async throws -> [XiaomiCloudDevice] {
-        let endpoint = deviceListEndpoint
-        Self.logger.info("设备列表请求开始，endpoint=\(Self.redactedURL(endpoint), privacy: .public)，userId=\(cloudSession.userID, privacy: .public)")
-        let plainData = #"{"getVirtualModel":true,"getHuamiDevices":1,"get_split_device":false,"support_smart_home":true}"#
+    /// 发送 RC4 加密并签名的米家 API 请求，并解密返回数据。
+    private func executeEncryptedCall(
+        endpoint: URL,
+        plainData: String,
+        using cloudSession: XiaomiCloudSession
+    ) async throws -> Data {
         let nonce = try XiaomiCloudCrypto.nonce()
         let signedNonce = try XiaomiCloudCrypto.signedNonce(
             ssecurity: cloudSession.ssecurity,
@@ -161,7 +162,7 @@ actor XiaomiCloudClient {
             ("_nonce", nonce),
         ]
         guard let body = XiaomiCloudCrypto.formEncodedData(requestFields) else {
-            throw XiaomiCloudError.invalidResponse("设备列表请求体无效")
+            throw XiaomiCloudError.invalidResponse("请求体编码失败")
         }
 
         var request = URLRequest(url: endpoint)
@@ -176,27 +177,52 @@ actor XiaomiCloudClient {
             cookieHeader(for: cloudSession),
             forHTTPHeaderField: "Cookie"
         )
-        Self.logger.info("设备列表请求发送，POST 表单字段=\(requestFields.map(\.0).joined(separator: ","), privacy: .public)，bodyBytes=\(body.count, privacy: .public)")
 
         let (data, response) = try await session.data(for: request)
         if let httpResponse = response as? HTTPURLResponse {
-            Self.logger.info("设备列表响应，HTTP=\(httpResponse.statusCode, privacy: .public)，body=\(Self.bodyPreview(data), privacy: .public)")
-        } else {
-            Self.logger.error("设备列表响应不是 HTTP，URL=\(Self.redactedURL(endpoint), privacy: .public)")
+            Self.logger.info("云端请求响应，HTTP=\(httpResponse.statusCode, privacy: .public)，endpoint=\(Self.redactedURL(endpoint), privacy: .public)")
         }
         try validate(response)
         guard let encodedResponse = String(data: data, encoding: .utf8) else {
-            throw XiaomiCloudError.invalidResponse("设备列表不是文本")
+            throw XiaomiCloudError.invalidResponse("响应不是文本")
         }
-        let decrypted = try XiaomiCloudCrypto.unseal(
+        return try XiaomiCloudCrypto.unseal(
             signedNonce: signedNonce,
             text: encodedResponse
         )
-        Self.logger.info("设备列表响应解密成功，bytes=\(decrypted.count, privacy: .public)")
+    }
+
+    /// 使用已授权会话读取中国大陆区域的设备列表。
+    func fetchDevices(using cloudSession: XiaomiCloudSession) async throws -> [XiaomiCloudDevice] {
+        let endpoint = deviceListEndpoint
+        Self.logger.info("设备列表请求开始，endpoint=\(Self.redactedURL(endpoint), privacy: .public)，userId=\(cloudSession.userID, privacy: .public)")
+        let plainData = #"{"getVirtualModel":true,"getHuamiDevices":1,"get_split_device":false,"support_smart_home":true}"#
+        let decrypted = try await executeEncryptedCall(endpoint: endpoint, plainData: plainData, using: cloudSession)
         let envelope = try JSONDecoder().decode(XiaomiDeviceListEnvelope.self, from: decrypted)
         let devices = envelope.result?.list ?? []
         Self.logger.info("设备列表解析成功，count=\(devices.count, privacy: .public)")
         return devices
+    }
+
+    /// 从米家云端获取指定 BLE 设备的 16 字节 BindKey (BeaconKey)。
+    func fetchBeaconKey(did: String, using cloudSession: XiaomiCloudSession) async throws -> String? {
+        let endpoint = URL(string: "https://api.io.mi.com/app/v2/device/blt_get_beaconkey")!
+        Self.logger.info("☁️ [XiaomiCloud] 正在查询设备 BeaconKey，did=\(did, privacy: .public)")
+        let plainData = #"{"did":"\#(did)","pdid":1}"#
+        do {
+            let decrypted = try await executeEncryptedCall(endpoint: endpoint, plainData: plainData, using: cloudSession)
+            let response = try JSONDecoder().decode(XiaomiBeaconKeyResponse.self, from: decrypted)
+            if let key = response.result?.beaconkey, !key.isEmpty {
+                Self.logger.info("✅ [XiaomiCloud] 成功获取温湿度计 BeaconKey: \(key.prefix(6))...\(key.suffix(4)) (长度=\(key.count))")
+                return key
+            } else {
+                Self.logger.warning("⚠️ [XiaomiCloud] 云端返回 message=\(response.message ?? "nil", privacy: .public), code=\(response.code ?? -1), 但未包含有效 BeaconKey")
+                return nil
+            }
+        } catch {
+            Self.logger.error("❌ [XiaomiCloud] 获取 BeaconKey 发生异常: \(error.localizedDescription, privacy: .public)")
+            throw error
+        }
     }
 
     /// 从 STS 跳转结果的临时 Cookie 中读取 serviceToken。
