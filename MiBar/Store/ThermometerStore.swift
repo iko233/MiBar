@@ -36,8 +36,10 @@ final class ThermometerStore {
 
     private let bluetoothService = BluetoothThermometerService()
     private var isStarted = false
+    let historyStore: ThermometerHistoryStore
 
-    init() {
+    init(historyStore: ThermometerHistoryStore = .shared) {
+        self.historyStore = historyStore
         self.configuration = LocalConfigStore.readThermometerConfig()
         self.cachedCloudThermometers = LocalConfigStore.readCachedCloudThermometers()
         syncDraftWithPrimary()
@@ -75,6 +77,7 @@ final class ThermometerStore {
                     self.reading = merged
                     self.statusText = "已连接（刚刚更新）"
                 }
+                self.historyStore.record(reading: merged, for: mac)
                 Self.logger.info("📊 [ThermometerStore] 收到 [MAC: \(mac, privacy: .public)] 读数: \(merged.temperatureString), \(merged.humidityString), 电量=\(merged.battery.map { "\($0)%" } ?? "无")")
             }
         }
@@ -249,6 +252,7 @@ final class ThermometerStore {
         let clean = mac.uppercased().filter { ("0"..."9").contains($0) || ("A"..."F").contains($0) }
         configuration.devices.removeAll { $0.normalizedMAC == clean }
         readings.removeValue(forKey: clean)
+        historyStore.clearHistory(for: clean)
 
         if configuration.primaryDevice == nil, let first = configuration.devices.first {
             setPrimaryDevice(mac: first.normalizedMAC)
@@ -259,7 +263,17 @@ final class ThermometerStore {
         LocalConfigStore.saveThermometerConfig(configuration)
         bluetoothService.updateConfiguration(configuration)
         updateStatusText()
-        Self.logger.info("🗑️ [ThermometerStore] 已删除设备: \(clean, privacy: .public)")
+        Self.logger.info("🗑️ [ThermometerStore] 已删除设备与历史数据: \(clean, privacy: .public)")
+    }
+
+    /// 获取指定设备的历史记录
+    func history(for mac: String, range: HistoryTimeRange? = nil) -> [ThermometerHistoryRecord] {
+        historyStore.history(for: mac, range: range)
+    }
+
+    /// 获取指定设备的历史极值与均值统计
+    func historyStats(for mac: String, range: HistoryTimeRange? = nil) -> ThermometerHistoryStats {
+        historyStore.stats(for: mac, range: range)
     }
 
     /// 保存用户手动配置或修改的温湿度计信息。
