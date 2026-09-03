@@ -95,7 +95,7 @@
         <div class="flex flex-col">
           <div class="flex items-center gap-2">
             <span class="text-lg font-bold tracking-tight text-white group-hover:text-amber-300 transition-colors" id="logoText">MiBar</span>
-            <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 font-mono border border-amber-500/30">v1.1.0</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 font-mono border border-amber-500/30">v1.5.0</span>
           </div>
           <span class="text-[11px] text-slate-400 font-normal">macOS 菜单栏挂灯控制器</span>
         </div>
@@ -143,14 +143,14 @@
         更新日志
       </h1>
       <p class="text-slate-400 text-base max-w-xl mx-auto italic">
-        “Simplicity is about subtracting the obvious and adding the meaningful.”
+        “To design is much more than simply to assemble, to order, or even to edit: it is to add value and meaning, to illuminate, to simplify, to clarify, to modify, to dignify, to dramatize, to persuade, and perhaps even to amuse.”
       </p>
     </div>
 
     <!-- Timeline Releases -->
     <div class="space-y-12 relative before:absolute before:inset-0 before:left-8 sm:before:left-1/2 before:w-0.5 before:bg-gradient-to-b before:from-amber-500/40 before:via-white/10 before:to-transparent">
       
-      <!-- Release v1.1.0 -->
+      <!-- Release v1.5.0 -->
       <article class="relative flex flex-col sm:flex-row items-start group">
         
         <!-- Center Icon Badge -->
@@ -159,11 +159,90 @@
         </div>
 
         <!-- Release Content Card -->
-        <div class="w-full sm:w-[calc(50%-2.5rem)] ml-16 sm:ml-auto p-6 sm:p-8 rounded-3xl bg-[#121826]/75 border border-amber-500/30 backdrop-blur-2xl shadow-xl hover:border-amber-400/50 transition-all">
+        <div class="w-full sm:w-[calc(50%-2.5rem)] ml-16 sm:mr-auto sm:ml-0 p-6 sm:p-8 rounded-3xl bg-[#121826]/75 border border-amber-500/30 backdrop-blur-2xl shadow-xl hover:border-amber-400/50 transition-all">
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <div class="flex items-center gap-2.5">
+              <span class="text-xl font-bold text-white">v1.5.0</span>
+              <span class="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Latest</span>
+            </div>
+            <time class="text-xs text-slate-400 font-mono">2026-09-03</time>
+          </div>
+
+          <div class="space-y-6 text-sm text-slate-300">
+            
+            <!-- Section 1 -->
+            <div>
+              <h3 class="text-white font-semibold flex items-center gap-2 mb-2.5 text-base">
+                <span class="text-amber-400">🔄</span> 统一设备管理中心重构
+              </h3>
+              <ul class="space-y-2 list-disc list-inside text-slate-300">
+                <li><strong class="text-white">彻底废除 Tab 分栏</strong>：重构为全流程单流式统一设备中心。</li>
+                <li><strong class="text-white">无设备自适应导入</strong>：未配任何设备时直出米家 App 快速扫码；扫码成功后列出名下所有挂灯与温湿度计卡片，支持用户自主勾选点击「添加」。</li>
+                <li><strong class="text-white">统一已连接列表与二级详情</strong>：已有设备时直出统一设备列表，点击任一项进入专属二级详情修改 IP / Token / 名称 / 设为主设备或移除；导航与返回文案统一规范为「列表」。</li>
+              </ul>
+            </div>
+
+            <!-- Section 2 -->
+            <div>
+              <h3 class="text-white font-semibold flex items-center gap-2 mb-2.5 text-base">
+                <span class="text-amber-400">🎨</span> 设备卡片 UI/UX 深度打磨
+              </h3>
+              <ul class="space-y-2 list-disc list-inside text-slate-300">
+                <li><strong class="text-white">自适应两行式硬件卡片</strong>：彻底解决 280pt 紧凑窗口下设备超长名称（如 10 汉字）折行拥挤成 5 行的问题。</li>
+                <li><strong class="text-white">单行锁定与呼吸感对齐</strong>：首行贯通呈现图标、设备全名与型号徽标；次行呈现单行等宽 MAC 与大字实时温湿度读数，呼吸感极佳。</li>
+              </ul>
+            </div>
+
+            <!-- Section 3 -->
+            <div>
+              <h3 class="text-white font-semibold flex items-center gap-2 mb-2.5 text-base">
+                <span class="text-amber-400">📦</span> 代码架构组件化与 500 行上限规范
+              </h3>
+              <ul class="space-y-2 list-disc list-inside text-slate-300">
+                <li><strong class="text-white">业务功能域重组</strong>：移除杂糅的 Components 目录，按业务域拆分为 <code class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 text-xs font-mono">LightControl</code>、<code class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 text-xs font-mono">Thermometer</code>、<code class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 text-xs font-mono">Configuration</code>、<code class="px-1.5 py-0.5 rounded bg-white/10 text-amber-300 text-xs font-mono">Common</code>。</li>
+                <li>全工程 36 个源码文件全部控制在 450 行以内，结构清晰，高内聚低耦合。</li>
+              </ul>
+            </div>
+
+            <!-- Section 4 -->
+            <div>
+              <h3 class="text-white font-semibold flex items-center gap-2 mb-2.5 text-base">
+                <span class="text-amber-400">🌡️</span> MiBeacon v5 增量分包解析与 3 mini 适配
+              </h3>
+              <ul class="space-y-2 list-disc list-inside text-slate-300">
+                <li>完整支持 <code class="text-xs font-mono">0x4801</code>（4 字节浮点温度）、<code class="text-xs font-mono">0x4802</code>（1 字节湿度）与 <code class="text-xs font-mono">0x4803</code>（电量）等 MiBeacon v5 原生对象。</li>
+                <li>单属性增量合并引擎解决米家温湿度计 3 mini 原厂固件为省电轮流单发湿度与温度的物理机制，任意包到达瞬间平滑融合呈现。</li>
+              </ul>
+            </div>
+
+            <!-- Section 5 -->
+            <div>
+              <h3 class="text-white font-semibold flex items-center gap-2 mb-2.5 text-base">
+                <span class="text-amber-400">📈</span> 温湿度历史数据缓存系统
+              </h3>
+              <ul class="space-y-2 list-disc list-inside text-slate-300">
+                <li>按 MAC 地址本地隔离持久化 JSON，内置 60 秒智能节流合并与极值均值统计，为后续历史趋势图表呈现奠定底层支持。</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+      </article>
+
+      <!-- Release v1.1.0 -->
+      <article class="relative flex flex-col sm:flex-row items-start group">
+        
+        <!-- Center Icon Badge -->
+        <div class="absolute left-8 sm:left-1/2 -translate-x-1/2 w-9 h-9 rounded-full bg-[#090d16] border-2 border-slate-500 flex items-center justify-center text-slate-300 shadow-md z-10">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+        </div>
+
+        <!-- Release Content Card -->
+        <div class="w-full sm:w-[calc(50%-2.5rem)] ml-16 sm:ml-auto p-6 sm:p-8 rounded-3xl bg-[#121826]/75 border border-white/10 backdrop-blur-2xl shadow-xl hover:border-white/20 transition-all">
           <div class="flex items-center justify-between gap-3 mb-4">
             <div class="flex items-center gap-2.5">
               <span class="text-xl font-bold text-white">v1.1.0</span>
-              <span class="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Latest</span>
             </div>
             <time class="text-xs text-slate-400 font-mono">2026-09-02</time>
           </div>
